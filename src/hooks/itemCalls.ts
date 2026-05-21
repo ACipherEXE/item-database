@@ -21,8 +21,7 @@ export async function addItem(queryClient: QueryClient, newItem: NewItem) {
   let image_path = null;
 
   if (newItem.image) {
-    const ext = newItem.image.name.split(".").pop();
-    const fileName = `${crypto.randomUUID()}.${ext}`;
+    const fileName = `${crypto.randomUUID()}.${newItem.image.name.split(".").pop()}`;
     const { error: uploadError } = await supabase.storage
       .from("item-images")
       .upload(fileName, newItem.image);

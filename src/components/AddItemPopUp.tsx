@@ -22,7 +22,7 @@ export function AddItemPopUp({ client }: { client: QueryClient }) {
     tags: "",
   });
   const [image, setImage] = useState<File | null>(null);
-
+  const [error, setError] = useState<string | null>(null);
   function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
     setForm({ ...form, [e.target.name]: e.target.value });
   }
@@ -30,6 +30,7 @@ export function AddItemPopUp({ client }: { client: QueryClient }) {
   async function handleSubmit() {
     if (!form.name) return;
     setLoading(true);
+    setError(null);
     try {
       await addItem(client, {
         name: form.name,
@@ -42,7 +43,7 @@ export function AddItemPopUp({ client }: { client: QueryClient }) {
       setImage(null);
       setOpen(false);
     } catch (err) {
-      console.error(err);
+      setError("Something went wrong. Please try again.");
     }
     setLoading(false);
   }
@@ -110,6 +111,7 @@ export function AddItemPopUp({ client }: { client: QueryClient }) {
               className={undefined}
             />
           </div>
+          {error && <p className="text-sm text-destructive">{error}</p>}
           <Button
             onClick={handleSubmit}
             disabled={loading}
