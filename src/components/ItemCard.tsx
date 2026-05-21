@@ -3,7 +3,7 @@ import { Badge } from "@/components/ui/badge";
 import { supabase } from "@/superbaseClient";
 import { Item } from "@/interfaces/itemInterface";
 import { Button } from "./ui/button";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { EditItemPopUp } from "./EditItemPopUp";
 import { useQueryClient } from "@tanstack/react-query";
 
@@ -12,6 +12,8 @@ export function ItemCard({ item }: { item: Item }) {
   const [editOpen, setEditOpen] = useState(false);
   const [lightboxOpen, setLightboxOpen] = useState(false);
   const [zoom, setZoom] = useState(1);
+  const lastPinchDistance = useRef<number | null>(null);
+  const zoomRef = useRef(zoom);
   const imageUrl = item.image_path
     ? supabase.storage.from("item-images").getPublicUrl(item.image_path).data
         .publicUrl
@@ -25,6 +27,27 @@ export function ItemCard({ item }: { item: Item }) {
   function handleWheel(e: React.WheelEvent) {
     e.preventDefault();
     setZoom((z) => Math.min(5, Math.max(0.5, z - e.deltaY * 0.001)));
+  }
+  function handleTouchMove(e: React.TouchEvent) {
+    if (e.touches.length !== 2) return;
+    e.preventDefault();
+
+    const dx = e.touches[0].clientX - e.touches[1].clientX;
+    const dy = e.touches[0].clientY - e.touches[1].clientY;
+    const distance = Math.sqrt(dx * dx + dy * dy);
+
+    if (lastPinchDistance.current !== null) {
+      const delta = distance - lastPinchDistance.current;
+      setZoom((z) => Math.min(5, Math.max(0.5, z + delta * 0.005)));
+    }
+
+    lastPinchDistance.current = distance;
+  }
+
+  function handleTouchEnd(e: React.TouchEvent) {
+    if (e.touches.length < 2) {
+      lastPinchDistance.current = null;
+    }
   }
 
   return (
@@ -79,6 +102,8 @@ export function ItemCard({ item }: { item: Item }) {
           className="fixed inset-0 z-50 flex items-center justify-center bg-black/80"
           onClick={() => setLightboxOpen(false)}
           onWheel={handleWheel}
+          onTouchMove={handleTouchMove}
+          onTouchEnd={handleTouchEnd}
         >
           {/* Zoom controls */}
           <div
@@ -127,7 +152,7 @@ export function ItemCard({ item }: { item: Item }) {
             alt={item.name}
             style={{
               transform: `scale(${zoom})`,
-              transition: "transform 0.15s ease",
+              transition: "transform 0.1s ease",
             }}
             className="max-h-[90vh] max-w-[90vw] object-contain rounded-lg shadow-2xl"
             onClick={(e) => e.stopPropagation()}

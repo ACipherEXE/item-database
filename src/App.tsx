@@ -10,20 +10,24 @@ export default function App() {
   const [search, setSearch] = useState("");
   return (
     <QueryClientProvider client={queryClient}>
-      <div className="flex items-center justify-between p-4">
-        <h1 className="text-2xl font-bold">Item Search</h1>
-        <Input
-          placeholder="Search by name, brand, category or tag..."
-          value={search}
-          onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-            setSearch(e.target.value)
-          }
-          className="max-w-sm"
-          type={undefined}
-        />
-        <AddItemPopUp client={queryClient} />
+      <div className="flex flex-col h-screen overflow-hidden">
+        <div className="flex items-center justify-between p-4 gap-4 border-b shrink-0">
+          <Input
+            placeholder="Search by name, brand, category or tag..."
+            value={search}
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+              setSearch(e.target.value)
+            }
+            className="max-w-sm"
+            type={undefined}
+          />
+          <AddItemPopUp client={queryClient} />
+        </div>
+
+        <div className="flex-1 overflow-y-auto">
+          <ItemGrid search={search} />
+        </div>
       </div>
-      <ItemGrid search={search} />
     </QueryClientProvider>
   );
 }
