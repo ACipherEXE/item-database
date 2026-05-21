@@ -1,4 +1,4 @@
-import { QueryClient, useQuery, useQueryClient } from "@tanstack/react-query";
+import { QueryClient, useQuery } from "@tanstack/react-query";
 import { supabase } from "@/superbaseClient";
 import { Item, NewItem } from "@/interfaces/itemInterface";
 
