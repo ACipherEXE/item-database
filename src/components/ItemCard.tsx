@@ -39,11 +39,15 @@ export function ItemCard({ item }: { item: Item }) {
         )}
       </CardHeader>
       <CardContent className="flex flex-col gap-2">
-        {item.category && <Badge variant="secondary">{item.category}</Badge>}
+        {item.category && (
+          <Badge variant="secondary" className={undefined}>
+            {item.category}
+          </Badge>
+        )}
         {item.tags && item.tags.length > 0 && (
           <div className="flex flex-wrap gap-1">
             {item.tags.map((tag) => (
-              <Badge key={tag} variant="outline">
+              <Badge key={tag} variant="outline" className={undefined}>
                 {tag}
               </Badge>
             ))}
