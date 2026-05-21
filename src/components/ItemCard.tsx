@@ -1,17 +1,7 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { supabase } from "@/superbaseClient";
-
-interface Item {
-  id: string;
-  name: string;
-  brand?: string;
-  category?: string;
-  tags?: string[];
-  image_path?: string;
-  created_at: string;
-  updated_at: string;
-}
+import { Item } from "@/interfaces/itemInterface";
 
 export function ItemCard({ item }: { item: Item }) {
   const imageUrl = item.image_path
