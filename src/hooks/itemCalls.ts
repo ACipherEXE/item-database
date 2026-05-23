@@ -1,7 +1,7 @@
 import { QueryClient, useQuery } from "@tanstack/react-query";
 import { supabase } from "@/superbaseClient";
 import { Item, NewItem } from "@/interfaces/itemInterface";
-
+import { v4 as uuidv4 } from "uuid";
 export function getItems() {
   return useQuery<Item[]>({
     queryKey: ["items"],
@@ -21,12 +21,13 @@ export async function addItem(queryClient: QueryClient, newItem: NewItem) {
   let image_path = null;
 
   if (newItem.image) {
-    const fileName = `${crypto.randomUUID()}.${newItem.image.name.split(".").pop()}`;
+    console.log("Yesp");
+    const fileName = `${uuidv4()}.${newItem.image.name.split(".").pop()}`;
     const { error: uploadError } = await supabase.storage
       .from("item-images")
       .upload(fileName, newItem.image);
 
-    if (uploadError) throw uploadError;
+    if (uploadError) throw { uploadError };
     image_path = fileName;
   }
 
