@@ -22,10 +22,13 @@ export function ItemGrid({ search }: { search: string }) {
       })
     : items;
   return (
-    <div className="grid grid-cols-[repeat(auto-fill,minmax(220px,1fr))] gap-4 p-4">
-      {filtered.map((item: Item) => (
-        <ItemCard key={item.id} item={item} />
-      ))}
-    </div>
+    <>
+      <div className="gap-4 p-4">Total items: {items.length}</div>
+      <div className="grid grid-cols-[repeat(auto-fill,minmax(220px,1fr))] gap-4 p-4">
+        {filtered.map((item: Item) => (
+          <ItemCard key={item.id} item={item} />
+        ))}
+      </div>
+    </>
   );
 }
