@@ -25,6 +25,19 @@ export function ItemCard({ item }: { item: Item }) {
   // Touch pan state (single finger)
   const lastTouchPos = useRef<{ x: number; y: number } | null>(null);
 
+  // Ref for the lightbox overlay div (needed for non-passive touch listener)
+  const lightboxRef = useRef<HTMLDivElement | null>(null);
+
+  // Mutable refs to hold latest zoom/offset so the non-passive listener can use them
+  const zoomRef = useRef(zoom);
+  const offsetRef = useRef(offset);
+  useEffect(() => {
+    zoomRef.current = zoom;
+  }, [zoom]);
+  useEffect(() => {
+    offsetRef.current = offset;
+  }, [offset]);
+
   const imageUrl = item.image_path
     ? supabase.storage.from("item-images").getPublicUrl(item.image_path).data
         .publicUrl
@@ -37,7 +50,51 @@ export function ItemCard({ item }: { item: Item }) {
     }
   }, [lightboxOpen]);
 
-  // Desktop: scroll to zoom (zoom toward center)
+  // Attach a non-passive touchmove listener directly on the lightbox element.
+  // React's synthetic onTouchMove is passive by default in modern browsers,
+  // so calling e.preventDefault() inside it has no effect — the browser still
+  // zooms the page. Attaching with { passive: false } gives us real control.
+  useEffect(() => {
+    const el = lightboxRef.current;
+    if (!el) return;
+
+    function onTouchMove(e: TouchEvent) {
+      e.preventDefault(); // blocks browser pinch-zoom and scroll on the page
+
+      if (e.touches.length === 2) {
+        // Pinch to zoom
+        lastTouchPos.current = null;
+        const dx = e.touches[0].clientX - e.touches[1].clientX;
+        const dy = e.touches[0].clientY - e.touches[1].clientY;
+        const distance = Math.sqrt(dx * dx + dy * dy);
+
+        if (lastPinchDistance.current !== null) {
+          const delta = distance - lastPinchDistance.current;
+          setZoom((z) => Math.min(5, Math.max(0.5, z + delta * 0.005)));
+        }
+        lastPinchDistance.current = distance;
+      } else if (e.touches.length === 1) {
+        // Single finger pan
+        const touch = e.touches[0];
+        if (lastTouchPos.current) {
+          const dx = touch.clientX - lastTouchPos.current.x;
+          const dy = touch.clientY - lastTouchPos.current.y;
+          setOffset((o) => ({ x: o.x + dx, y: o.y + dy }));
+        }
+        lastTouchPos.current = { x: touch.clientX, y: touch.clientY };
+      }
+    }
+
+    el.addEventListener("touchmove", onTouchMove, { passive: false });
+    return () => el.removeEventListener("touchmove", onTouchMove);
+  }, [lightboxOpen]); // re-bind whenever lightbox opens/closes
+
+  function handleTouchEnd(e: React.TouchEvent) {
+    if (e.touches.length < 2) lastPinchDistance.current = null;
+    if (e.touches.length === 0) lastTouchPos.current = null;
+  }
+
+  // Desktop: scroll to zoom
   function handleWheel(e: React.WheelEvent) {
     e.preventDefault();
     setZoom((z) => Math.min(5, Math.max(0.5, z - e.deltaY * 0.001)));
@@ -63,39 +120,6 @@ export function ItemCard({ item }: { item: Item }) {
 
   function handleMouseUp() {
     isDragging.current = false;
-  }
-
-  // Mobile: pinch to zoom + single finger pan
-  function handleTouchMove(e: React.TouchEvent) {
-    e.preventDefault();
-
-    if (e.touches.length === 2) {
-      // Pinch to zoom
-      lastTouchPos.current = null;
-      const dx = e.touches[0].clientX - e.touches[1].clientX;
-      const dy = e.touches[0].clientY - e.touches[1].clientY;
-      const distance = Math.sqrt(dx * dx + dy * dy);
-
-      if (lastPinchDistance.current !== null) {
-        const delta = distance - lastPinchDistance.current;
-        setZoom((z) => Math.min(5, Math.max(0.5, z + delta * 0.005)));
-      }
-      lastPinchDistance.current = distance;
-    } else if (e.touches.length === 1) {
-      // Single finger pan
-      const touch = e.touches[0];
-      if (lastTouchPos.current) {
-        const dx = touch.clientX - lastTouchPos.current.x;
-        const dy = touch.clientY - lastTouchPos.current.y;
-        setOffset((o) => ({ x: o.x + dx, y: o.y + dy }));
-      }
-      lastTouchPos.current = { x: touch.clientX, y: touch.clientY };
-    }
-  }
-
-  function handleTouchEnd(e: React.TouchEvent) {
-    if (e.touches.length < 2) lastPinchDistance.current = null;
-    if (e.touches.length === 0) lastTouchPos.current = null;
   }
 
   return (
@@ -150,12 +174,12 @@ export function ItemCard({ item }: { item: Item }) {
       {/* Lightbox */}
       {lightboxOpen && imageUrl && (
         <div
+          ref={lightboxRef}
           className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 overflow-hidden"
           onWheel={handleWheel}
           onMouseMove={handleMouseMove}
           onMouseUp={handleMouseUp}
           onMouseLeave={handleMouseUp}
-          onTouchMove={handleTouchMove}
           onTouchEnd={handleTouchEnd}
           onClick={() => setLightboxOpen(false)}
         >

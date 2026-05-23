@@ -54,7 +54,7 @@ export async function updateItem(
 
   if (updates.image) {
     // Upload new image
-    const fileName = `${crypto.randomUUID()}.${updates.image.name.split(".").pop()}`;
+    const fileName = `${uuidv4()}.${updates.image.name.split(".").pop()}`;
     const { error: uploadError } = await supabase.storage
       .from("item-images")
       .upload(fileName, updates.image);
