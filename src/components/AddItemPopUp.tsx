@@ -43,7 +43,6 @@ export function AddItemPopUp({ client }: { client: QueryClient }) {
       setImage(null);
       setOpen(false);
     } catch (err) {
-      console.log(err);
       setError("Something went wrong. Please try again.");
     }
     setLoading(false);
