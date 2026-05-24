@@ -10,15 +10,9 @@ interface EndpointResult {
   status: "success" | "error" | "pending";
   message: string;
 }
-
+// Need to figure out how to flip pages and a limit of 5 and that the limit of 250 was not reached
+// https://maniology.com/collections/nail-stamping-plates/products.json?limit=250&page=2
 const ENDPOINTS = [
-  {
-    label: "handle lookup",
-    url: (code: string) =>
-      `https://maniology.com/products/${code.toLowerCase()}.json`,
-    extract: (data: any, _code: string): any[] =>
-      data?.product ? [data.product] : [],
-  },
   {
     label: "stamping-plates collection",
     url: (_code: string) =>
@@ -29,24 +23,6 @@ const ENDPOINTS = [
           p.handle?.toLowerCase().includes(code.toLowerCase()) ||
           p.title?.toLowerCase().includes(code.toLowerCase()),
       ),
-  },
-  {
-    label: "all products search",
-    url: (_code: string) =>
-      `https://maniology.com/collections/all/products.json?limit=250`,
-    extract: (data: any, code: string): any[] =>
-      (data?.products ?? []).filter(
-        (p: any) =>
-          p.handle?.toLowerCase().includes(code.toLowerCase()) ||
-          p.title?.toLowerCase().includes(code.toLowerCase()),
-      ),
-  },
-  {
-    label: "search suggestions",
-    url: (code: string) =>
-      `https://maniology.com/search/suggest.json?q=${encodeURIComponent(code)}&resources[type]=product&resources[limit]=5`,
-    extract: (data: any, _code: string): any[] =>
-      data?.resources?.results?.products ?? [],
   },
 ];
 
