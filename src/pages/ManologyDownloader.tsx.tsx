@@ -1,3 +1,4 @@
+import { ItemCard } from "@/components/ItemCard";
 import { useState } from "react";
 
 interface Product {
@@ -41,9 +42,7 @@ function extractImage(match: any): string | null {
   return imgUrl.split("?")[0];
 }
 
-export default function PlateDownloader({
-  onImageSelected,
-}: PlateDownloaderProps) {
+export default function ManologyDownloader() {
   const [userInput, setUserInput] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(false);
   const [products, setProducts] = useState<Product[]>([]);
@@ -115,19 +114,6 @@ export default function PlateDownloader({
       a.href = URL.createObjectURL(blob);
       a.download = `${userInput.toUpperCase()}.jpg`;
       a.click();
-    } catch {
-      window.open(product.imgUrl, "_blank");
-    }
-  }
-
-  async function useImage(product: Product): Promise<void> {
-    try {
-      const res = await fetch(product.imgUrl);
-      const blob = await res.blob();
-      const file = new File([blob], `${userInput.toUpperCase()}.jpg`, {
-        type: blob.type,
-      });
-      onImageSelected?.(file);
     } catch {
       window.open(product.imgUrl, "_blank");
     }
@@ -206,55 +192,44 @@ export default function PlateDownloader({
       {products.length > 0 && (
         <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
           {products.map((product, i) => (
-            <div
-              key={i}
-              style={{
-                border: "1px solid #ddd",
-                borderRadius: 12,
-                overflow: "hidden",
-              }}
-            >
-              <img
-                src={product.imgUrl}
-                alt={product.title}
-                style={{ width: "100%", display: "block" }}
-              />
+            <div>
               <div
+                key={i}
                 style={{
-                  padding: "12px 16px",
-                  display: "flex",
-                  justifyContent: "space-between",
-                  alignItems: "center",
+                  border: "1px solid #ddd",
+                  borderRadius: 12,
+                  overflow: "hidden",
                 }}
               >
-                <div>
-                  <p style={{ margin: 0, fontWeight: 500 }}>{product.title}</p>
-                  <p style={{ margin: 0, fontSize: 12, color: "#888" }}>
-                    {userInput.toUpperCase()}
-                  </p>
-                </div>
-                <div style={{ display: "flex", gap: 8 }}>
-                  {onImageSelected && (
+                <img
+                  src={product.imgUrl}
+                  alt={product.title}
+                  style={{ width: "100%", display: "block" }}
+                />
+                <div
+                  style={{
+                    padding: "12px 16px",
+                    display: "flex",
+                    justifyContent: "space-between",
+                    alignItems: "center",
+                  }}
+                >
+                  <div>
+                    <p style={{ margin: 0, fontWeight: 500 }}>
+                      {product.title}
+                    </p>
+                    <p style={{ margin: 0, fontSize: 12, color: "#888" }}>
+                      {userInput.toUpperCase()}
+                    </p>
+                  </div>
+                  <div style={{ display: "flex", gap: 8 }}>
                     <button
-                      onClick={() => useImage(product)}
-                      style={{
-                        padding: "8px 16px",
-                        borderRadius: 8,
-                        background: "#2563eb",
-                        color: "#fff",
-                        border: "none",
-                        cursor: "pointer",
-                      }}
+                      onClick={() => download(product)}
+                      style={{ padding: "8px 16px", borderRadius: 8 }}
                     >
-                      Use Image
+                      Download
                     </button>
-                  )}
-                  <button
-                    onClick={() => download(product)}
-                    style={{ padding: "8px 16px", borderRadius: 8 }}
-                  >
-                    Download
-                  </button>
+                  </div>
                 </div>
               </div>
             </div>

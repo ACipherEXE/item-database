@@ -10,7 +10,7 @@ export interface Item {
   image?: File;
 }
 export interface NewItem {
-  name: string;
+  name?: string;
   brand?: string;
   category?: string;
   tags?: string[];

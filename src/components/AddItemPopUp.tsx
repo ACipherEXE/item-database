@@ -11,6 +11,7 @@ import {
 } from "@/components/ui/dialog";
 import { addItem } from "@/hooks/itemCalls";
 import { QueryClient } from "@tanstack/react-query";
+import PlateDownloader from "@/tools/PlateDownloader";
 
 export function AddItemPopUp({ client }: { client: QueryClient }) {
   const [open, setOpen] = useState(false);
@@ -21,6 +22,7 @@ export function AddItemPopUp({ client }: { client: QueryClient }) {
     category: "",
     tags: "",
   });
+  const [imageSource, setImageSource] = useState<"upload" | "lookup">("upload");
   const [image, setImage] = useState<File | null>(null);
   const [error, setError] = useState<string | null>(null);
   function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
@@ -111,6 +113,16 @@ export function AddItemPopUp({ client }: { client: QueryClient }) {
               className={undefined}
             />
           </div>
+          <div className="flex flex-col gap-1">
+            <Button
+              onClick={() => window.open("/manology-downloader", "_blank")}
+              disabled={loading}
+              className={undefined}
+            >
+              <Label className={undefined}>Manology Image look up</Label>
+            </Button>
+          </div>
+
           {error && <p className="text-sm text-destructive">{error}</p>}
           <Button
             onClick={handleSubmit}
