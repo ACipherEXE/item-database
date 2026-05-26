@@ -28,3 +28,7 @@ This project was a way to quickly do a project my mom wanted a way to store a lo
 ## Why is there no delete button
 
 - You can't lose data, you can't erase yourself
+
+## Will I continue?
+
+- Yeah, I need to polish what's already here and build an offline variant. 
