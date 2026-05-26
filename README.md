@@ -1,6 +1,6 @@
 # item-database
 
-This project was a way to quickly do a project my mom wanted a way to store a lot of nail plates she has without pulling out all of them out of boxes.
+This project was a way to quickly do a project my mom wanted a way to store a lot of nail plates she has without pulling out all of them out of boxes. Also a way to explore docker and superbase locally.
 
 ## You will need
 
