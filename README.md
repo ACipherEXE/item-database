@@ -19,6 +19,7 @@ This project was a way to quickly do a project my mom wanted a way to store a lo
 - Displays the total of items
 - Search items by Name, brand, category, and tags
 - You can edit any item name, brand, category, tags and images.
+- There is an image lookup and download of manology plates
 
 ## image
 
