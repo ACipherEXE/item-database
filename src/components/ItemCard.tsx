@@ -96,7 +96,6 @@ export function ItemCard({ item }: { item: Item }) {
 
   // Desktop: scroll to zoom
   function handleWheel(e: React.WheelEvent) {
-    e.preventDefault();
     setZoom((z) => Math.min(5, Math.max(0.5, z - e.deltaY * 0.001)));
   }
 
