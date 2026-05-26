@@ -19,3 +19,7 @@ This project was a way to quickly do a project my mom wanted a way to store a lo
 - Displays the total of items
 - Search items by Name, brand, category, and tags
 - You can edit any item name, brand, category, tags and images.
+
+## image
+
+<img width="687" height="1305" alt="image" src="https://github.com/user-attachments/assets/88f59c78-26bf-4087-8855-cbf31a872c9b" />
