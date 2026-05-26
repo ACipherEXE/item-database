@@ -1,4 +1,5 @@
 import { ItemCard } from "@/components/ItemCard";
+import { Label } from "@/components/ui/label";
 import { useState } from "react";
 
 interface Product {
@@ -121,6 +122,10 @@ export default function ManologyDownloader() {
 
   return (
     <div style={{ maxWidth: 520, margin: "0 auto", padding: "1.5rem" }}>
+      <Label style={{ marginBottom: "20px" }} className={undefined}>
+        Manology plate look up
+      </Label>
+      <div>Type in the textbox a plate code:</div>
       <div style={{ display: "flex", gap: 8, marginBottom: "1.5rem" }}>
         <input
           type="text"
@@ -135,6 +140,7 @@ export default function ManologyDownloader() {
             border: "1px solid #ccc",
           }}
         />
+
         <button
           onClick={search}
           disabled={loading}
