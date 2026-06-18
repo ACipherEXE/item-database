@@ -10,8 +10,10 @@ This project was a way to quickly do a project my mom wanted a way to store a lo
 ## How to see it?
 
 - Start docker
-- npm install
-- supabase start <- this could take some time
+- in a terminal do the following
+- git clone https://github.com/ACipherEXE/item-database.git
+- cd item-database
+- docker compose up --build
 
 ## What does it do?
 
@@ -31,4 +33,4 @@ This project was a way to quickly do a project my mom wanted a way to store a lo
 
 ## Will I continue?
 
-- Yeah, I need to polish what's already here and build an offline variant. 
+- Yeah, I need to polish what's already here and build an offline variant.
