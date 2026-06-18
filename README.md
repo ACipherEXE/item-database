@@ -34,3 +34,4 @@ This project was a way to quickly do a project my mom wanted a way to store a lo
 ## Will I continue?
 
 - Yeah, I need to polish what's already here and build an offline variant.
+- Mom is testing this project and a server has been made locally
