@@ -1,0 +1,38 @@
+version: "3.8"
+
+services:
+  app:
+    build: .
+    ports:
+      - "5173:5173"
+    environment:
+      - VITE_SUPABASE_URL=http://localhost:54321
+      - VITE_SUPABASE_ANON_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZS1kZW1vIiwicm9sZSI6ImFub24iLCJleHAiOjE5ODM4MTI5OTZ9.CRFA0NiK7kyqd7Vev8IuEah_5C2rMFhkHxGYADptNkY
+    depends_on:
+      - supabase-db
+    restart: unless-stopped
+
+  supabase-db:
+    image: supabase/postgres:15.8.1.060
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: postgres
+      POSTGRES_USER: postgres
+    volumes:
+      - db-data:/var/lib/postgresql/data
+      - ./supabase/migrations:/docker-entrypoint-initdb.d
+    restart: unless-stopped
+
+  supabase-studio:
+    image: supabase/studio:latest
+    ports:
+      - "54324:3000"
+    environment:
+      SUPABASE_URL: http://supabase-kong:8000
+      STUDIO_PG_META_URL: http://supabase-meta:8080
+    restart: unless-stopped
+
+volumes:
+  db-data:
