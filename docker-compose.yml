@@ -7,7 +7,7 @@ services:
       - "5173:5173"
     environment:
       - VITE_SUPABASE_URL=http://localhost:54321
-      - VITE_SUPABASE_ANON_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZS1kZW1vIiwicm9sZSI6ImFub24iLCJleHAiOjE5ODM4MTI5OTZ9.CRFA0NiK7kyqd7Vev8IuEah_5C2rMFhkHxGYADptNkY
+      - VITE_SUPABASE_ANON_KEY=sb_publishable_ACJWlzQHlZjBrEguHvfOxg_3BJgxAaH
     depends_on:
       - supabase-db
     restart: unless-stopped
@@ -16,6 +16,7 @@ services:
     image: supabase/postgres:15.8.1.060
     ports:
       - "5432:5432"
+      - "54321:5432"
     environment:
       POSTGRES_PASSWORD: postgres
       POSTGRES_DB: postgres
