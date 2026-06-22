@@ -40,7 +40,15 @@ This project was a way to quickly do a project my mom wanted a way to store a lo
 <img width="847" height="1450" alt="image" src="https://github.com/user-attachments/assets/ebdeb14f-36f3-42ad-9f63-371815257f1a" />
 
 <img width="859" height="1436" alt="image" src="https://github.com/user-attachments/assets/d35f3ac2-8bb8-486c-962d-995a2441ff4e" />
-- 
+- GO to storage and make a new bucket called "item-images"
+- Click it and click policies
+- Then click new policy
+- click "For full customization"
+- name the policy anon full control
+- Click all the checkboxes
+- target rolls put anon
+- click review and then save policy
+- finally go back to the terminal at root of the project and do a npm run dev 
 
  
 
